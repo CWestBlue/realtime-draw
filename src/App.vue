@@ -16,7 +16,12 @@ import firebase from 'firebase';
 const environment = {
   production: false,
   firebase: {
-    // Firebase connections go here
+    apiKey: 'AIzaSyB2oqcuKQTlrwuV7YHAdFAycMZaTBrpzgo',
+    authDomain: 'nx-database.firebaseapp.com',
+    databaseURL: 'https://nx-database.firebaseio.com',
+    projectId: 'nx-database',
+    storageBucket: 'nx-database.appspot.com',
+    messagingSenderId: '616704118379'
   }
 };
 
@@ -27,7 +32,6 @@ let canvasRef = db.ref('canvas');
 let linesRef = db.ref('lines');
 let currentMouseLocRef = db.ref('mouseCurrent');
 let existingLines = [];
-let exampleContent = 'This is TEXT';
 
 export default {
   name: 'app',
@@ -54,15 +58,8 @@ export default {
       }
     };
   },
-  computed: {
-    currentMouse: function() {
-      // const dataImage = c.toDataURL();
-      // this.$firebaseRefs.users.push(dataImage);
-    }
-  },
   methods: {
     draw: function(event) {
-      // const canvas = this.lines[0];
       // requestAnimationFrame(this.draw);
       if (this.mouse.down) {
         var c = document.getElementById('canvas');
@@ -105,7 +102,6 @@ export default {
       var c = document.getElementById('canvas');
       var ctx = c.getContext('2d');
       var rect = c.getBoundingClientRect();
-      var c = document.getElementById('canvas');
       var item = {
         x: event.pageX - rect.left,
         y: event.pageY - rect.top
@@ -121,7 +117,6 @@ export default {
         var c = document.getElementById('canvas');
         // const dataImage = c.toDataURL();
         // this.$firebaseRefs.users.push(dataImage);
-        console.log('moving');
         var rect = c.getBoundingClientRect();
         var item = {
           x: loc.val().x - rect.left,
@@ -135,9 +130,9 @@ export default {
       }
     });
     linesRef.on('child_added', item => {
-      // console.log(item.val());
       const res = item.val();
       if (existingLines.findIndex(r => r.x == res.x && r.y == res.y) !== -1) {
+        return;
       } else {
         var c = document.getElementById('canvas');
         // let c = document.createElement('canvas');
@@ -159,14 +154,12 @@ export default {
     });
   },
   updated: function() {
-    // console.log('drawing');
     // const canvas = this.canvases[0];
     // var c = document.getElementById('canvas');
     // var image = new Image();
     // image.src = canvas['.value'];
     // image.onload = () => {
     //   c.getContext('2d').drawImage(image, 0, 0);
-    //   console.log('loaded');
     // };
   },
   ready: function() {
